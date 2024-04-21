@@ -4,16 +4,14 @@ class Solution {
         
         // Load up the character-frequency mappings using the first string.
         for (char ch : s.toCharArray()) {
-            characterFrequencies.put(ch, characterFrequencies.getOrDefault(ch, 0) + 1);
+            characterFrequencies.merge(ch, 1, Integer::sum);
         }
         
         // Unload the character-frequency mappings using the second string.
         for (char ch : t.toCharArray()) {
-            if (characterFrequencies.getOrDefault(ch, 0) == 0) {
+            if (characterFrequencies.merge(ch, -1, Integer::sum) < 0) {
                 return false;
             }
-            
-            characterFrequencies.put(ch, characterFrequencies.getOrDefault(ch, 0) - 1);
         }
         
         // Check if the two strings are anagrams.
