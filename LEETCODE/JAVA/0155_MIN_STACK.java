@@ -1,5 +1,11 @@
 class MinStack {
 
+    // The idea is to maintain the stack as a singly-linked list of Node objects, where each node contains the current value of the node alongside
+    // the minimum value for the entire stack.
+
+    // Insertion and deletion (popping and pushing), as well as accessing the top and the minimum value (top and getMin) will all take place at the head,
+    // giving us constant-time insertion, deletion, and access.
+
     class Node {
         int val;
         int min;
