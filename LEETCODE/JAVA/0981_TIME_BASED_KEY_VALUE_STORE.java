@@ -1,4 +1,6 @@
 class TimeMap {
+
+    // In this TimeMap data structure, we will hash string keys onto pairs containing timestamps as keys and the string values as values.
     
     Map<String, List<Pair<Integer, String>>> keyMap;
 
