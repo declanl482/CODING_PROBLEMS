@@ -1,42 +1,54 @@
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        // Merge the two sorted arrays into a new sorted array.
+        int n = nums1.length;
+        int m = nums2.length;
         
-        int N = nums1.length;
-        int M = nums2.length;
+        // Ensure that the input argument for nums1 is larger than (or equal in size to) the
+        // nums2 input.
+        if (n > m) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
         
-        int mergeLen = N + M;
-        int[] merge = new int[mergeLen];
+        // Compute the total and half number of elements among the two arrays.
+        int total = n + m;
+        int half = (total + 1) / 2;
         
-        int nums1Ptr = 0;
-        int nums2Ptr = 0;
-        int mergePtr = 0;
+        int left = 0;
+        int right = n;
         
-        while (nums1Ptr < N && nums2Ptr < M) {
-            if (nums1[nums1Ptr] < nums2[nums2Ptr]) {
-                merge[mergePtr++] = nums1[nums1Ptr++];
+        var res = 0.0;
+        
+        // Perform a binary search until the appropriate partition point is determined.
+        while (left <= right) {
+            int i = left + (right - left) / 2;
+            int j = half - i;
+            
+            // Compute the elements in each array which border the partition point.
+            int left1 = (i > 0) ? nums1[i - 1] : Integer.MIN_VALUE;
+            int right1 = (i < n) ? nums1[i] : Integer.MAX_VALUE;
+            int left2 = (j > 0) ? nums2[j - 1] : Integer.MIN_VALUE;
+            int right2 = (j < m) ? nums2[j] : Integer.MAX_VALUE;
+            
+            // Check if the partition point is correct.
+            if (left1 <= right2 && left2 <= right1) {
+                if (total % 2 == 0) {
+                    res = (Math.max(left1, left2) + Math.min(right1, right2)) / 2.0;
+                }
+                else {
+                    res = Math.max(left1, left2);
+                }
+                break;
+            }
+            else if (left1 > right2) {
+                // If the partition is too far right, move the right pointer back.
+                right = i - 1;
             }
             else {
-                merge[mergePtr++] = nums2[nums2Ptr++];
+                // If the partition is too far left, move the left pointer forward.
+                left = i + 1;
             }
         }
         
-        while (nums1Ptr < N) {
-            merge[mergePtr++] = nums1[nums1Ptr++];
-        }
-
-        while (nums2Ptr < M) {
-            merge[mergePtr++] = nums2[nums2Ptr++];
-        }
-        
-        // If N (the size of the merged array) is odd, the median is M[N / 2].
-        // If N is even, the median is (M[N / 2] + M[(N / 2) + 1]) / 2.
-        
-        if (mergeLen % 2 == 0) {
-            return (double)(merge[mergeLen / 2] + merge[(mergeLen / 2) - 1]) / 2;
-        }
-        else {
-            return (double)merge[mergeLen / 2];   
-        }
+        return res;
     }
 }
